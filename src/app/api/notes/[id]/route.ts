@@ -1,14 +1,17 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+type RouteParams = { params: Promise<{ id: string }> }
+
 // GET - 특정 노트 조회
 export async function GET(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
+    const { id } = await params
     const note = await prisma.note.findUnique({
-      where: { id: params.id },
+      where: { id },
     })
 
     if (!note) {
@@ -25,13 +28,14 @@ export async function GET(
 // PUT - 노트 수정
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
+    const { id } = await params
     const { title, content, published } = await request.json()
 
     const note = await prisma.note.update({
-      where: { id: params.id },
+      where: { id },
       data: { title, content, published },
     })
 
@@ -45,11 +49,12 @@ export async function PUT(
 // DELETE - 노트 삭제
 export async function DELETE(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: RouteParams
 ) {
   try {
+    const { id } = await params
     await prisma.note.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ message: '노트가 삭제되었습니다' })
