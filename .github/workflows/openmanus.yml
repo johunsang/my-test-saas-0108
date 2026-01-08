@@ -32,8 +32,8 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip setuptools wheel
-          # 핵심 패키지 먼저 설치 (OpenAI, Anthropic 등)
-          pip install openai anthropic pydantic pydantic-settings toml tenacity colorama tiktoken
+          # 핵심 패키지 먼저 설치 (OpenAI, Anthropic, AWS 등)
+          pip install openai anthropic pydantic pydantic-settings toml tenacity colorama tiktoken boto3
           # crawl4ai 설치 시 pillow 버전 고정
           pip install pillow==10.4.0
           pip install crawl4ai==0.6.3 || pip install crawl4ai
