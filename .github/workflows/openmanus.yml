@@ -32,13 +32,17 @@ jobs:
           python -m venv .venv
           source .venv/bin/activate
           pip install --upgrade pip setuptools wheel
-          # 핵심 패키지 먼저 설치 (OpenAI, Anthropic, AWS 등)
-          pip install openai anthropic pydantic pydantic-settings toml tenacity colorama tiktoken boto3
-          # crawl4ai 설치 시 pillow 버전 고정
+          # pillow 버전 고정 후 전체 설치
           pip install pillow==10.4.0
-          pip install crawl4ai==0.6.3 || pip install crawl4ai
-          # 나머지 requirements 설치 (충돌 무시)
-          pip install -r requirements.txt || true
+          # 필수 패키지들 (requirements.txt 충돌 우회)
+          pip install openai anthropic pydantic pydantic-settings toml tenacity colorama tiktoken boto3 loguru httpx aiohttp
+          # crawl4ai 설치 (버전 문제 무시)
+          pip install crawl4ai || true
+          # 나머지 requirements 설치 (의존성 충돌 무시)
+          pip install --no-deps -r requirements.txt || true
+          # 누락된 의존성 재설치
+          pip install playwright browsergym || true
+          playwright install chromium || true
 
       - name: Configure OpenManus
         run: |
